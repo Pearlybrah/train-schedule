@@ -26,6 +26,18 @@ var database = firebase.database();
         frequency: frequency
     };
 
+    let newRow = $("<tr>").append(
+      $("<td>").text(trainName),
+      $("<td>").text(destination),
+      $("<td>").text(frequency),
+      $("<td>").text(""),
+      $("<td>").text(""),
+    );
+
+
+    $("#train-table > tbody").append(newRow);
+
+
     database.ref().push(newTrain);
 
     $("#train-input").val("");
@@ -39,12 +51,13 @@ var database = firebase.database();
     var destination = childSnapshot.val().role;
     var frequency = childSnapshot.val().start;
 
-    var newRow = $("<tr>").append(
+       
+    let newRow = $("<tr>").append(
       $("<td>").text(trainName),
       $("<td>").text(destination),
       $("<td>").text(frequency),
-      $("<td>").text(),
-      $("<td>").text(),
+      $("<td>").text(""),
+      $("<td>").text(""),
     );
   
     $("#train-table > tbody").append(newRow);
