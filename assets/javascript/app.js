@@ -20,18 +20,30 @@ var database = firebase.database();
     var destination = $("#destination-input").val().trim();
     var frequency = $("#frequency-input").val().trim();
 
+    var currentTime = moment();
+    var convertTime = moment(currentTime).format("hh:mm");
+    var differentTime = moment().diff(moment(convertTime), "minutes");
+    var remainingTime = differentTime % frequency;
+    var minutesAway = frequency - remainingTime;
+    var nextTrain = moment().add(minutesAway, "minutes");
+    var trainConverted = moment(nextTrain).format("hh:mm");
+    var minutesConverted = moment(nextTrain).format("mm");
+
     var newTrain = {
         train: trainName,
         destination: destination,
-        frequency: frequency
+        frequency: frequency,
+        timeAway: minutesConverted,
+        next: trainConverted
     };
+
 
     let newRow = $("<tr>").append(
       $("<td>").text(trainName),
       $("<td>").text(destination),
       $("<td>").text(frequency),
-      $("<td>").text(""),
-      $("<td>").text(""),
+      $("<td>").text(trainConverted),
+      $("<td>").text(minutesConverted),
     );
 
 
@@ -43,6 +55,7 @@ var database = firebase.database();
     $("#train-input").val("");
     $("#destination-input").val("");
     $("#frequency-input").val("");
+   
   });
 
   database.ref().on("child_added", function(childSnapshot) {
@@ -50,14 +63,16 @@ var database = firebase.database();
     var trainName = childSnapshot.val().name;
     var destination = childSnapshot.val().role;
     var frequency = childSnapshot.val().start;
+    var nextUp = childSnapshot.val().next;
+    var mAway = childSnapshot.val().timeAway;
 
        
     let newRow = $("<tr>").append(
       $("<td>").text(trainName),
       $("<td>").text(destination),
       $("<td>").text(frequency),
-      $("<td>").text(""),
-      $("<td>").text(""),
+      $("<td>").text(nextUp),
+      $("<td>").text(mAway),
     );
   
     $("#train-table > tbody").append(newRow);
